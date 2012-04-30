@@ -152,7 +152,7 @@ class Bdp_Form extends Zend_Form
     }
 
     // the default <br /><br /> as separator is a semantic non-sense...
-    if($type=='radio' && empty($options['separator'])){
+    if(($type=='radio' || $type=='multiCheckbox') && empty($options['separator'])){
       $options['separator'] = ' ';
     }
 
