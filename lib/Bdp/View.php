@@ -56,9 +56,8 @@ class Bdp_View extends Pimcore_View
     if(Zend_Controller_Front::getInstance()->getRequest()->getModuleName() != PIMCORE_FRONTEND_MODULE){
       return parent::_run($file);
     }
-    if(is_dir($file)){
-      throw new Bdp_Exception('Trying to display a directory !');
-    }
+    assert('is_file($file)');
+
 //     if($name!='front.html'){throw new Exception();}
     return Bdp_View_Partial::factory($file, $this)->render();
   }

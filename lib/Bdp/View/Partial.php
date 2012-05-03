@@ -184,8 +184,8 @@ class Bdp_View_Partial extends Bdp_DOM_Aggregate
 //       backtrace($this->path);
       if(strpos($this->path, 'layouts/')!==false){
         $res = $this->view->doctype()."\n".$res;
-        $res = str_replace('<br></br>', '<br/>', $res); // too bad...
       }
+      $res = str_replace('<br></br>', '<br/>', $res); // too bad...
       return $res;
     }
 
