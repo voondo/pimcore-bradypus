@@ -107,7 +107,9 @@ class Bdp_Context_Dev
 
   public function assertCallback( $file, $line, $message )
   {
-      throw new Bdp_Exception('Assertion failed : '.$message);
+      $e = new Bdp_Exception('Assertion failed : '.$message);
+      $e->removeTraceLevels(1);
+      throw $e;
   }
 
   public function phpErrorCallback($errno, $errstr, $errfile, $errline)

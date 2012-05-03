@@ -37,6 +37,7 @@ class Bdp_View_DomHelper_FormDisplayGroup extends Bdp_View_DomHelper_FormAbstrac
 
     $name = $this->attr('name');
     $display_group = $form->getDisplayGroup( $this->attr('name') );
+    assert('isset($display_group); // Display group not found');
     $display_group->removeDecorator('DtDdWrapper');
     if(!isset($display_group)){
       throw new Bdp_DOM_Exception('Display group #'.$name.' not found', $this->doc());
