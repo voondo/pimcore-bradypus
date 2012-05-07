@@ -33,7 +33,12 @@ class Bdp_View_DomHelper_FormErrors extends Bdp_View_DomHelper_FormAbstract {
 
   public function internalRun()
   {
-    $form = $this->_form();
+    $form = clone $this->_form();
+
+    $form->setDecorators(array(
+      'FormErrors'
+    ));
+    $this->dom->after( Bdp_DOM_Tidy::html($form) );
 /*
     $name = $this->attr('name');
     $el = $form->getElement( $this->attr('name') );

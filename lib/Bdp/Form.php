@@ -82,6 +82,7 @@ class Bdp_Form extends Zend_Form
     Zend_Validate_Abstract::setDefaultTranslator(Zend_Registry::get('Zend_Translate'));
 
     $this->addPrefixPath('Bdp_Form', 'Bdp/Form');
+    $this->addPrefixPath('Website_Form', 'Website/Form');
     $config = new Zend_Config_Ini('website/var/config/forms.ini', $this->name);
     $this->setConfig($config);
   }
