@@ -98,19 +98,29 @@ abstract class Bdp_Tool
     $vowels = $options['vowels']?'aeuy':'';
     $numbers = $options['numbers']?'23456789':'';
     $consonants = $options['consonants']?'bdghjmnpqrstvz':'';
+    $alternate_cpt = 1;
     if (!empty($consonants) && ($strength & 1)) {
-            $consonants .= 'BDGHJLMNPQRSTVWXZ';
+      $consonants .= 'BDGHJLMNPQRSTVWXZ';
+      ++$alternate_cpt;
     }
     if (!empty($vowels) && ($strength & 2)) {
-            $vowels .= "AEUY";
+      $vowels .= "AEUY";
+      ++$alternate_cpt;
     }
     if (!empty($consonants) && ($strength & 4)) {
-            $consonants .= '@#$%';
+      $consonants .= '@#$%';
+      ++$alternate_cpt;
+    }
+
+    $alternate = $options['alternate'];
+
+    if($alternate_cpt === 1){
+      $alternate = false;
     }
 
     $password = '';
 
-    if($options['alternate']){
+    if($alternate){
       $alt = mt_rand() % 3;
       $cons_len = strlen($consonants);
       $vow_len = strlen($vowels);
