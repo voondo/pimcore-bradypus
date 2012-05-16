@@ -139,6 +139,18 @@ class Bdp_Object
 
         return !empty($res);
       }
+    } elseif(substr($m, -8)=='Currency') {
+
+      $getter = substr($m, 0, -8);
+      $reflection = new ReflectionObject($object);
+
+      if($reflection->hasMethod($getter)){
+        $res = $reflection->getMethod($getter)->invokeArgs($object, $p);
+
+        $currency = new Zend_Currency();
+        $res = $currency->toCurrency($res);
+        return $res;
+      }
     }
   }
 }

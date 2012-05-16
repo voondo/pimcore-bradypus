@@ -99,7 +99,7 @@ class Bdp_Plugin extends Pimcore_API_Plugin_Abstract implements Pimcore_API_Plug
         'namespace' => 'Website',
       ));
 
-      if(DEBUG_MODE){
+      if(PIMCORE_DEBUG){
         new Bdp_Context_Dev();
       } else {
         new Bdp_Context_Production();

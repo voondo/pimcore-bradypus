@@ -384,7 +384,7 @@ substring( normalize-space( @class ), string-length( @class ) - string-length( \
               $node_name = $simple_selector;
             }
 
-            ///TODO : E[foo~="warning"] E:first-child etc.
+            ///TODO : E[foo~="warning"] etc.
           }
         }
 
@@ -395,6 +395,9 @@ substring( normalize-space( @class ), string-length( @class ) - string-length( \
           switch($expr){
             case 'first-child':
               $pseudo_attr = '1';
+            break;
+            case 'last-child':
+              $pseudo_attr = 'position()=last()';
             break;
             default:
               throw new Bdp_Exception('Unknown pseudo-selector : '.$expr);
@@ -1177,7 +1180,9 @@ substring( normalize-space( @class ), string-length( @class ) - string-length( \
         self::_empty( $node, 'DOMText' );
 
         $tnode = $node->ownerDocument->createTextNode( $val );
-        $node->appendChild( $tnode );
+        if(isset($tnode)){
+          $node->appendChild( $tnode );
+        }
       }
 
       return $this;

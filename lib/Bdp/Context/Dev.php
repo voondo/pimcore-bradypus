@@ -123,7 +123,7 @@ class Bdp_Context_Dev
       return;
     }
 
-    $msg = 'PHP error #'.$errno.' : '.$errstr;
+    $msg = 'PHP error #'.$errno.' : "'.$errstr.'" - '.$errfile.':'.$errline;
 
     self::manageException($msg, true);
 

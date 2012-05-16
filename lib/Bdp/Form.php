@@ -248,6 +248,7 @@ class Bdp_Form extends Zend_Form
 
   public function disable( $elements )
   {
+    throw new Exception('TODO');
     if(!is_array($elements)){
       $elements = array($elements);
     }
@@ -256,8 +257,37 @@ class Bdp_Form extends Zend_Form
     {
       $element = $this->getElement($element);
 
-      dump($element);die;
     }
+  }
+
+  private $_hiddenFormElement = null;
+  public function hiddenFormElement()
+  {
+    if(!isset($this->_hiddenFormElement)){
+      $name = $this->_hiddenFormElementName();
+
+      $el = $this->createElement('hidden', $name, array(
+        'value' => 1
+        ));
+      $this->addElement($el);
+      $this->_hiddenFormElement = $el;
+    }
+
+    return $this->_hiddenFormElement;
+  }
+
+  private function _hiddenFormElementName()
+  {
+    return '__bdp_'.$this->getName();
+  }
+
+  public function isValid( $vars )
+  {
+    if(!isset($vars[$this->_hiddenFormElementName()])){
+      return false;
+    }
+
+    return parent::isValid($vars);
   }
 
 }

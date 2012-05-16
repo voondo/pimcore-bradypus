@@ -225,4 +225,16 @@ abstract class Bdp_Tool
     }
     return $data;
   }
+
+  /**
+   * @author NikiC @ http://stackoverflow.com/a/3596110/1108154
+   */
+  public function repeatArray($length, $values) {
+    foreach (new InfiniteIterator(new ArrayIterator($values)) as $element) {
+      if (!$length--) return $result;
+      $result[] = $element;
+    }
+
+    return $result;
+  }
 }

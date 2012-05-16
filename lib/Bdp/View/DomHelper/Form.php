@@ -43,13 +43,20 @@ class Bdp_View_DomHelper_Form extends Bdp_View_DomHelper_FormAbstract {
       $res = $form->render();
     } else {
       $form->clearDecorators()
-        ->addDecorator('form');
+        ->addDecorator('form')
+        ->addDecorator('FormHiddenElement');
 
       $res = $form->render();
 
       $this->_el = $this->after( $this->fragment($res) )
         ->attr('bdp-name', $name)
         ->attr('id', 'form-'.$name);
+
+      $class = $this->attr('class');
+      if(isset($class)){
+        $this->_el->attr('class', $class);
+      }
+
       $this->_el->append($children);
 
     }

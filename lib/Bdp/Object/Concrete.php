@@ -61,6 +61,10 @@ abstract class Bdp_Object_Concrete extends Object_Concrete
     return $res;
   }
 
+  public function getModificationDateObject(){
+    return Bdp_Date::timestamp( $this->getModificationDate() );
+  }
+
   protected function _keyPath($key)
   {
     return $this->getParent()->getPath().'/'.$key;
