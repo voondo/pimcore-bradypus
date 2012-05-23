@@ -120,4 +120,31 @@ abstract class Bdp_Object_Concrete extends Object_Concrete
   {
     return unserialize(Bdp_Tool::decrypt($data, static::_serializeKeys()));
   }
+  
+  public function setValue( $k, $v )
+  {
+    if(strpos($k, '.')===false){
+      return parent::setValue($k, $v);
+    }
+    
+    $k = explode('.', $k);
+    assert('count($k) === 3');
+    
+    $method = 'get'.ucfirst($k[0]);
+    $brick = call_user_func(array($this, $method));
+    
+    $method = 'get'.ucfirst($k[1]);
+    $brick_data = call_user_func(array($brick, $method));
+    
+    if(!isset($brick_data)){
+      $class = 'Object_Objectbrick_Data_'.ucfirst($k[1]);
+      $brick_data = new $class($this);
+    }
+    
+    $method = 'set'.ucfirst($k[2]);
+    call_user_func(array($brick_data, $method), $v);
+    
+    $method = 'set'.ucfirst($k[1]);
+    call_user_func(array($brick, $method), $brick_data);
+  }
 }
