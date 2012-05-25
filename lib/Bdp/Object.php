@@ -152,5 +152,7 @@ class Bdp_Object
         return $res;
       }
     }
+
+    throw new Exception('Unkown method '.$m.' for object '.get_class($object));
   }
 }

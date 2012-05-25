@@ -89,9 +89,8 @@ class Bdp_Plugin extends Pimcore_API_Plugin_Abstract implements Pimcore_API_Plug
 
     public function preDispatch(  )
     {
-
       $bdpViewHelper = new Bdp_Controller_Action_Helper_ViewRenderer();
-  Zend_Controller_Action_HelperBroker::addHelper($bdpViewHelper);
+      Zend_Controller_Action_HelperBroker::addHelper($bdpViewHelper);
       $front = Zend_Controller_Front::getInstance();
       $loader = Zend_Loader_Autoloader::getInstance();
       $websiteLoader = new Zend_Application_Module_Autoloader(array(
@@ -184,4 +183,8 @@ function backtrace($msg=null, $silent=false){
   @ob_end_flush();} else {
   file_put_contents('plugins/Bdp/install/dump.log', $res, FILE_APPEND);
   }
+}
+
+if(PHP_SAPI=='cli'){
+  Bdp_Plugin::preDispatch();
 }

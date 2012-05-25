@@ -8,11 +8,11 @@ class Bdp_Object_Objectbrick_Data_Abstract extends Object_Objectbrick_Data_Abstr
     try {
       parent::__call($m, $p);
     } catch( Exception $e ){
-      $res = Bdp_Object::__objectMagicCall($this, $m, $p);
-      if(!isset($res)){
+      if(strpos($e->getMessage(), 'Call to undefined method')!==false){
+        return Bdp_Object::__objectMagicCall($this, $m, $p);
+      } else {
         throw $e;
       }
-      return $res;
     }
   }
 }

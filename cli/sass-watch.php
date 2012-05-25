@@ -32,10 +32,6 @@
 
 require __DIR__.'/../lib/Bdp/CliBootstrap.php';
 
-if(DEBUG_MODE){
-
-}
-
 $compiled_dir = 'website/static/css_compiled';
 passthru('mkdir -p '.$compiled_dir);
 passthru('sass --load-path plugins/Bdp/views/styles --watch website/views/styles:'.$compiled_dir);

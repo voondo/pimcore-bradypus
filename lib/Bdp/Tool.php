@@ -87,6 +87,7 @@ abstract class Bdp_Tool
     'numbers' => true,
     'strength' => 0,
     'alternate' => true,
+    'allow_consecutive' => true,
     'length' => 9
   );
   public static function generateRandom(array $options = null) {
@@ -113,6 +114,7 @@ abstract class Bdp_Tool
     }
 
     $alternate = $options['alternate'];
+    $allow_consecutive = $options['allow_consecutive'];
 
     if($alternate_cpt === 1){
       $alternate = false;
@@ -130,21 +132,32 @@ abstract class Bdp_Tool
       $dictionary = $consonants.$vowels.$numbers;
       $dict_len = strlen($dictionary);
     }
+
+    $prev_char = null;
     for ($i = 0; $i < $length; $i++) {
       if(isset($alt)){
         if ($alt == 1) {
-          $password .= $consonants[(mt_rand() % $cons_len)];
+          $char = $consonants[(mt_rand() % $cons_len)];
           $alt = 0;
         } elseif($alt == 2) {
-          $password .= $vowels[(mt_rand() % $vow_len)];
+          $char = $vowels[(mt_rand() % $vow_len)];
           $alt = 1;
         } else {
-          $password .= $numbers[(mt_rand() % $num_len)];
+          $char = $numbers[(mt_rand() % $num_len)];
           $alt = 2;
         }
       } else {
-        $password .= $dictionary[mt_rand() % $dict_len];
+        $char = $dictionary[mt_rand() % $dict_len];
       }
+
+      if(!$allow_consecutive && isset($prev_char) && $char === $prev_char){
+        --$i;
+        $char = '';
+        continue;
+      }
+
+      $password .= $char;
+      $prev_char = $char;
     }
     return $password;
   }
