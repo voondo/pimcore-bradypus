@@ -36,6 +36,13 @@
 abstract class Bdp_Object_Concrete extends Object_Concrete
 {
 
+  public function setKey( $key )
+  {
+    $key = iconv('UTF-8', 'ASCII//TRANSLIT//IGNORE', $key);
+
+    return parent::setKey($key);
+  }
+
   public function save()
   {
 
