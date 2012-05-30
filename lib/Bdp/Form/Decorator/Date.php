@@ -38,7 +38,7 @@ class Bdp_Form_Decorator_Date extends Zend_Form_Decorator_Abstract
     public function render($content)
     {
         $element = $this->getElement();
-        if (!$element instanceof My_Form_Element_Date) {
+        if (!$element instanceof Bdp_Form_Element_Date) {
             // Nous ne rendons que des éléments Date
             return $content;
         }

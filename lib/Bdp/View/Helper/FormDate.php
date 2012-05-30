@@ -89,7 +89,6 @@ class Bdp_View_Helper_FormDate extends Zend_View_Helper_FormElement
 
     $formatted_parts = explode($sep, $format);
 //     dump($formatted_parts);die;
-    $tmp = Bdp_Date::zero();
     $now = Bdp_Date::now();
 
     foreach($formatted_parts as $formated_part){
@@ -104,6 +103,7 @@ class Bdp_View_Helper_FormDate extends Zend_View_Helper_FormElement
           'selected' => !isset($value)
           )
       );
+      $tmp = Bdp_Date::zero();
       switch($part){
         case 'day':
           for($i=1; $i<=31; ++$i){

@@ -30,7 +30,8 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-require __DIR__.'/startup.php';
+define('NO_SUDO', true);
+require __DIR__.'/_bootstrap.php';
 
 $compiled_dir = 'website/static/css_compiled';
 passthru('mkdir -p '.$compiled_dir);
