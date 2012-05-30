@@ -1,4 +1,3 @@
-#!/usr/bin/php
 <?php
 /*
  * Copyright (c) 2007-2012, Romain Lalaut <romain.lalaut@laposte.net>
@@ -30,8 +29,14 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-require __DIR__.'/startup.php';
+function bdpPhpExec($cmd, $php_path=null)
+{
+  if(!isset($php_path)){
+    $config = Pimcore_Config::getSystemConfig();
+    $php_path = $config->general->php_cli;
+  }
 
-$compiled_dir = 'website/static/css_compiled';
-passthru('mkdir -p '.$compiled_dir);
-passthru('sass --load-path plugins/Bdp/views/styles --watch website/views/styles:'.$compiled_dir);
+  $cmd = 'PATH='.getenv('PATH').' '.$php_path.' '.$cmd;
+  echo "(i) $cmd\n";
+  passthru($cmd);
+}

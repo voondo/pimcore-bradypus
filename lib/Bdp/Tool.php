@@ -51,6 +51,33 @@ abstract class Bdp_Tool
       ));
   }
 
+  public static function pluralizeCamelCase( $name )
+  {
+    $f1 = new Zend_Filter_Word_CamelCaseToUnderscore();
+    $name = $f1->filter($name);
+
+    $parts = explode('_', $name);
+    $name = array();
+    foreach($parts as $part)
+    {
+      $name[] = self::pluralize( $part );
+    }
+    $name = implode('_', $name);
+
+    $f2 = new Zend_Filter_Word_UnderscoreToCamelCase();
+    $name = $f2->filter($name);
+
+    return $name;
+  }
+
+  public static function pluralize( $name )
+  {
+    if(empty($name) || substr($name,-1)=='s'){
+      return $name;
+    }
+    return $name.'s';
+  }
+
   public static function updateObjectFromArray( Object_Concrete $object, array $data )
   {
     $reflection = new ReflectionObject($object);

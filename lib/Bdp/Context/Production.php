@@ -40,14 +40,16 @@ class Bdp_Context_Production
 
 	public function __construct()
 	{
-		$this->is_cli = PHP_SAPI == 'cli';
-
-		if(!$this->is_cli)
-            ini_set('display_errors', '0');
+// 		$this->is_cli = PHP_SAPI == 'cli';
+//       error_reporting(E_ERROR | E_WARNING)
+//
+// // 		if(!$this->is_cli)
+//             ini_set('display_errors', '0');
 		libxml_use_internal_errors(true);
 		assert_options(ASSERT_ACTIVE,	 0);
-		set_error_handler(array($this,'phpErrorCallback'));
-		set_exception_handler(array($this,'manageException'));
+                Bdp_DOM::disableParsingExceptions(true);
+// 		set_error_handler(array($this,'phpErrorCallback'));
+// 		set_exception_handler(array($this,'manageException'));
 
 	}
 
@@ -58,7 +60,6 @@ class Bdp_Context_Production
 
 	public function preDispatch( Zend_Application_Bootstrap_BootstrapAbstract $bootstrap )
 	{
-        Bdp_DOM::disableParsingExceptions(true);
 	}
 
 	public function postDispatch( Zend_Application_Bootstrap_BootstrapAbstract $bootstrap )
@@ -66,31 +67,4 @@ class Bdp_Context_Production
 
 	}
 
-	public function manageException( Exception $e )
-	{
-		if($this->is_cli)
-		{
-			echo "\n";
-			echo $e;
-			echo "\n";
-		}
-		else
-		{
-			error_log($e);
-			if(!headers_sent())
-				header('HTTP/1.1 500 Internal Server Error');
-
-			die('500 Internal Server Error');
-		}
-	}
-
-	public function phpErrorCallback($errno, $errstr, $errfile, $errline)
-	{
-        $msg = 'PHP Error: '.$errstr.' in  '.$errfile.':'.$errline;
-        if($this->is_cli)
-            echo $msg;
-
-		if($errno!==E_STRICT)
-            error_log($msg);
-	}
 }

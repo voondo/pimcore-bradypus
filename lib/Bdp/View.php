@@ -40,6 +40,7 @@ class Bdp_View extends Pimcore_View
     parent::__construct($config);
 
     $this->addHelperPath('Bdp/View/Helper', 'Bdp_View_Helper');
+    $this->setEncoding('UTF-8');
   }
 
   /**
@@ -50,6 +51,9 @@ class Bdp_View extends Pimcore_View
     */
   public function render($name)
   {
+    if(substr($name, -5) === '.html'){
+      $name = substr($name, 0, -5).'.phtml';
+    }
     // find the script file name using the parent private method
     $file = $this->_script($name);
 

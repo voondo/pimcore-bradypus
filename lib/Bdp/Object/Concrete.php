@@ -39,9 +39,9 @@ abstract class Bdp_Object_Concrete extends Object_Concrete
   public function save()
   {
 
-    $path = $this->getPath();
+    $key = $this->getKey();
 
-    if(empty($path) && !empty(static::$_defaultParentId)){
+    if(empty($key) && !empty(static::$_defaultParentId)){
 
       $this->setParentId(static::$_defaultParentId);
       $lock_id = $this->getClassName().'KeyGeneration';
@@ -75,17 +75,17 @@ abstract class Bdp_Object_Concrete extends Object_Concrete
     return parent::getByPath($this->_keyPath($key));
   }
 
-  protected static $_keyPrefix;
+  protected $_keyPrefix;
   private function _findFreeKey()
   {
     $i = 0;
     $max_tries = 20;
     do {
-      $key = static::$_keyPrefix.'_'.strtoupper(Bdp_Tool::generateRandom(array(
+      $key = $this->_keyPrefix.'_'.strtoupper(Bdp_Tool::generateRandom(array(
         'length' => 7,
         'alternate' => false
         )));
-      $key = ltrim($key, '_');
+      $key = strtoupper(str_replace(' ', '_', ltrim($key, '_')));
       $res = $this->getByKey($key);
 
     } while(isset($res) && ++$i < $max_tries);
@@ -100,7 +100,7 @@ abstract class Bdp_Object_Concrete extends Object_Concrete
     try {
       parent::__call($m, $p);
     } catch( Exception $e ){
-      if(strpos($e->getMessage(), 'Call to undefined method')!==false){
+      if(strpos($e->getMessage(), 'all to undefined method')!==false){
         return Bdp_Object::__objectMagicCall($this, $m, $p);
       } else {
         throw $e;

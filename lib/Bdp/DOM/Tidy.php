@@ -71,7 +71,15 @@ class Bdp_DOM_Tidy extends Bdp_Exception
       $xml = iconv( $encoding, 'UTF-8//TRANSLIT//IGNORE', $xml);
     }
 
-    $xml = DOMDocument::loadHtml('<?xml encoding="UTF-8">'.$xml);
+    $xml = DOMDocument::loadHtml('<?xml encoding="UTF-8">
+    <html>
+    <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    </head>
+    <body>
+      '.$xml.'
+    </body>
+    </html>');
 
     foreach ($xml->childNodes as $item){
         if ($item->nodeType == XML_PI_NODE){
@@ -93,17 +101,19 @@ class Bdp_DOM_Tidy extends Bdp_Exception
 
     foreach($nodes as $node){
       $xml = $node->xml();
-      $cur = 0;
-      while(($pos = strpos($xml, '<![CDATA[', $cur))!==false){
-        $pos2 = strpos($xml, ']]>', $cur+1);
-        $xml = substr($xml, 0, $pos).'
-//'.substr($xml, $pos, $pos2-$pos).'
-//]]>'.substr($xml, $pos2+3);
-        $cur = $pos2+7;
-      }
+      $xml = str_replace(array(
+        '<![CDATA[',
+        ']]>'
+        ), array(
+        '//<![CDATA[',
+        '//]]>'
+        ), $xml);
+
       $res[] = $xml;
     }
-    return implode("\n", $res);
+    $res = implode("\n", $res);
+
+    return $res;
   }
 }
 

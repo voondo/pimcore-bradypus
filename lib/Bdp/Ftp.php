@@ -29,7 +29,31 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-chdir(__DIR__.'/../../../..');
+/**
+ * @author Romain Lalaut <romain.lalaut@laposte.net>
+ * @author tendrid at gmail dot com - http://fr2.php.net/manual/en/book.ftp.php#105868
+ * @package Bdp_Ftp
+ */
+class Bdp_Ftp {
 
-require './pimcore/cli/startup.php';
+    private $_con;
 
+    public function __construct($url, $port = 21, $timeout = 90){
+        $this->_con = ftp_connect($url, $port, $timeout);
+    }
+
+    public function __call($func,$a){
+      $func = 'ftp_'.$func;
+      if(function_exists($func)){
+          array_unshift($a,$this->_con);
+          return call_user_func_array($func,$a);
+      } else {
+          throw new Bdp_Exception("$func is not a valid FTP function");
+      }
+    }
+}
+
+// Example
+// $ftp = new ftp('ftp.example.com');
+// $ftp->ftp_login('username','password');
+// var_dump($ftp->ftp_nlist());

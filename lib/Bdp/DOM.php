@@ -158,20 +158,20 @@ class Bdp_DOM extends Bdp_Object implements IteratorAggregate
 
   private static function _parseError($xml_path, $is_raw_xml = false)
   {
-      if($is_raw_xml)
-      {
-          $xml = $xml_path;
-          $xml_path = tempnam(null, __CLASS__);
-          file_put_contents($xml_path, '<div>'.$xml.'</div>');
-          $delete_file = true;
-      }
-      else
-          $delete_file = false;
-
-      if(self::$disable_parsing_exceptions)
-          trigger_error('Bad formed xml : '.file_get_contents($xml_path));
-      else
+      if(self::$disable_parsing_exceptions) {
+          trigger_error('Bad formed xml : '.$xml_path, E_USER_WARNING);
+      } else {
+          if($is_raw_xml) {
+              $xml = $xml_path;
+              $xml_path = tempnam(null, __CLASS__);
+              file_put_contents($xml_path, '<div>'.$xml.'</div>');
+              $delete_file = true;
+          }
+          else {
+            $delete_file = false;
+          }
           throw new Bdp_DOM_FileParsingException($xml_path, $delete_file);
+      }
   }
 
   /**

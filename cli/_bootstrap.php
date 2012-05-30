@@ -1,4 +1,3 @@
-#!/usr/bin/php
 <?php
 /*
  * Copyright (c) 2007-2012, Romain Lalaut <romain.lalaut@laposte.net>
@@ -30,8 +29,25 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-require __DIR__.'/startup.php';
+require __DIR__.'/../../../pimcore/cli/startup.php';
+require __DIR__.'/_tools.php';
 
-$compiled_dir = 'website/static/css_compiled';
-passthru('mkdir -p '.$compiled_dir);
-passthru('sass --load-path plugins/Bdp/views/styles --watch website/views/styles:'.$compiled_dir);
+if(!defined('NO_SUDO')){
+  $current = posix_getpwuid(posix_geteuid());
+  $config = Pimcore_Config::getSystemConfig();
+  $expected = $config->general->php_owner;
+
+  if($current['name']!==$expected)
+  {
+      $init_cwd = getcwd();
+      $tmp = array_shift($_SERVER['argv']);
+      $tmp = $init_cwd.'/'.$tmp;
+      array_unshift($_SERVER['argv'], $tmp);
+      echo "(!) Trying to execute as {$current['name']} not as $expected. Restarting... \n";
+
+      $cmd = 'APPLICATION_ENV='.APPLICATION_ENV.' PATH='.getenv('PATH').' sudo -E -u '.$expected.' '.$config->general->php_cli.' '.implode(' ', $_SERVER['argv']);
+      echo "(i) $cmd\n";
+      passthru($cmd);
+      die;
+  }
+}

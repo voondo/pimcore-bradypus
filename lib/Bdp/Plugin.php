@@ -33,7 +33,7 @@ class Bdp_Plugin extends Pimcore_API_Plugin_Abstract implements Pimcore_API_Plug
 
   public static function version()
   {
-    return '1.99.0';
+    return '1.99.1';
   }
 
   public function preUpdateObject( $object )
@@ -89,19 +89,25 @@ class Bdp_Plugin extends Pimcore_API_Plugin_Abstract implements Pimcore_API_Plug
 
     public function preDispatch(  )
     {
-      $bdpViewHelper = new Bdp_Controller_Action_Helper_ViewRenderer();
-      Zend_Controller_Action_HelperBroker::addHelper($bdpViewHelper);
-      $front = Zend_Controller_Front::getInstance();
-      $loader = Zend_Loader_Autoloader::getInstance();
-      $websiteLoader = new Zend_Application_Module_Autoloader(array(
-        'basePath'  => 'website',
-        'namespace' => 'Website',
-      ));
+      try{
+        $bdpViewHelper = new Bdp_Controller_Action_Helper_ViewRenderer();
+        Zend_Controller_Action_HelperBroker::addHelper($bdpViewHelper);
+        $front = Zend_Controller_Front::getInstance();
+        $loader = Zend_Loader_Autoloader::getInstance();
+        $websiteLoader = new Zend_Application_Module_Autoloader(array(
+          'basePath'  => 'website',
+          'namespace' => 'Website',
+        ));
 
-      if(PIMCORE_DEBUG){
-        new Bdp_Context_Dev();
-      } else {
-        new Bdp_Context_Production();
+        if($config->general->debug){
+          new Bdp_Context_Dev();
+        } else {
+          new Bdp_Context_Production();
+        }
+
+      } catch(Exception $e){
+        dump((string) $e, true);
+        throw $e;
       }
     }
 
@@ -171,17 +177,17 @@ function dump($var, $silent=false){
   $req = Zend_Controller_Front::getInstance()->getRequest();
   if(!$silent && (!isset($req) || $req->getModuleName() == PIMCORE_FRONTEND_MODULE)){echo $res;
   @ob_end_flush();} else {
-  file_put_contents('plugins/Bdp/install/dump.log', $res, FILE_APPEND);
+  file_put_contents('website/var/log/dump.log', $res, FILE_APPEND);
   }
 }
 function backtrace($msg=null, $silent=false){
   ob_start();
   echo new Bdp_Exception_Backtrace($msg)."\n\n";
   $res = ob_get_clean();
-  file_put_contents('plugins/Bdp/install/dump.log', $res, FILE_APPEND);
+  file_put_contents('website/var/log/backtrace.log', $res, FILE_APPEND);
   if(!$silent && (!isset($req) || $req->getModuleName() == PIMCORE_FRONTEND_MODULE)){echo $res;
   @ob_end_flush();} else {
-  file_put_contents('plugins/Bdp/install/dump.log', $res, FILE_APPEND);
+  file_put_contents('website/var/log/backtrace.log', $res, FILE_APPEND);
   }
 }
 

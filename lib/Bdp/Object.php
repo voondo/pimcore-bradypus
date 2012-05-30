@@ -117,6 +117,7 @@ class Bdp_Object
   }
 
   public static function __objectMagicCall($object, $m, $p){
+
    // 5 == strlen('Label')
     if(substr($m, -5)=='Label'){
 
@@ -150,6 +151,23 @@ class Bdp_Object
         $currency = new Zend_Currency();
         $res = $currency->toCurrency($res);
         return $res;
+      }
+    } elseif(substr($m, 0, 3)=='add') {
+
+      $part = Bdp_Tool::pluralizeCamelCase(substr($m, 3));
+
+      $getter = 'get'.$part;
+      $setter = 'set'.$part;
+      $reflection = new ReflectionObject($object);
+
+      if($reflection->hasMethod($getter)){
+        $res = $reflection->getMethod($getter)->invoke($object);
+
+        $obj = array_shift($p);
+        $res[] = $obj;
+
+        $reflection->getMethod($setter)->invoke($object, $res);
+        return;
       }
     }
 

@@ -84,6 +84,7 @@ class Bdp_Form extends Zend_Form
     $this->addPrefixPath('Bdp_Form', 'Bdp/Form');
     $this->addPrefixPath('Website_Form', 'Website/Form');
     $config = new Zend_Config_Ini('website/var/config/forms.ini', $this->name);
+
     $this->setConfig($config);
   }
 
